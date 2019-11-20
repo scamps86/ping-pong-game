@@ -1,0 +1,12 @@
+@import './bootstrap-overrides';
+
+
+body, html {
+  height: 100%;
+}
+
+#root {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+}

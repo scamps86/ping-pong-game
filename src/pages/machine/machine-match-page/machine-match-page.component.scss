@@ -1,0 +1,24 @@
+@import '../../../variables';
+
+
+.page-container {
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+
+  .game-score {
+    display: flex;
+    justify-content: center;
+    background-color: #fff;
+
+    .score-red {
+      color: $red-team-color;
+      margin-right: 10rem;
+    }
+
+    .score-black {
+      color: $black-team-color;
+      margin-left: 10rem;
+    }
+  }
+}

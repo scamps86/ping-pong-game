@@ -1,0 +1,18 @@
+@import '../../../variables';
+
+
+.player-box {
+  border-radius: 1rem;
+  padding: 2rem;
+  display: inline-block;
+  color: #fff;
+  background-color: $no-team-color;
+
+  &.red-team {
+    background-color: $red-team-color;
+  }
+
+  &.black-team {
+    background-color: $black-team-color;
+  }
+}
