@@ -17,4 +17,5 @@
 
 
 This is a proof of concept game using React + Redux + Typescript + Web sockets + Node Express<br>
+Prepared to use it in different environments<br>
 Using Node 10.16.0

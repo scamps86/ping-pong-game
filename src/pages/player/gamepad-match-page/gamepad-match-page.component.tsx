@@ -25,7 +25,6 @@ export const GamepadMatchPageComponent: React.FunctionComponent<TProps> = (props
     let initialY: number;
     let yOffset = 0;
 
-
     const addEventListeners = (e: HTMLDivElement) => {
         if (e) {
             dragZoneElement = e;
@@ -69,15 +68,17 @@ export const GamepadMatchPageComponent: React.FunctionComponent<TProps> = (props
     };
 
     const setTranslate = (x, y) => {
-        const maxY: number = dragZoneElement.clientHeight - dragItemElement.clientHeight;
-        if (y < 0) {
-            y = 0;
+        if (dragZoneElement && dragItemElement) {
+            const maxY: number = dragZoneElement.clientHeight - dragItemElement.clientHeight;
+            if (y < 0) {
+                y = 0;
+            }
+            if (y > maxY) {
+                y = maxY;
+            }
+            dragItemElement.style.transform = 'translate3d(' + x + 'px, ' + y + 'px, 0)';
+            setJoystickPosition(me.uuid, Math.floor(y * 100 / maxY));
         }
-        if (y > maxY) {
-            y = maxY;
-        }
-        dragItemElement.style.transform = 'translate3d(' + x + 'px, ' + y + 'px, 0)';
-        setJoystickPosition(me.uuid, Math.floor(y * 100 / maxY));
     };
 
     // Redirect to team select gamepad when screen is not match
@@ -93,9 +94,7 @@ export const GamepadMatchPageComponent: React.FunctionComponent<TProps> = (props
                 <div className="drag-item"
                      ref={(e) => dragItemElement = e}
                 >
-                    <h2 className="player-name">
-                        {me.name}
-                    </h2>
+                    {me.name}
                 </div>
             </div>
         </div>
