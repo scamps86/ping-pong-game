@@ -11,19 +11,20 @@ export type TProps = PropsWithChildren<{
     increaseScore: (EUserTeam) => void;
 }>;
 
-const ANIMATION_MS = 8;
+const ANIMATION_MS = 1;
+const BALL_RADIUS = 10;
 const BAR_HEIGHT = 120;
 const BAR_WIDTH = 24;
 const BAR_WALL_DISTANCE = 20;
 const BAR_MARGIN = BAR_WIDTH + BAR_WALL_DISTANCE;
-const BALL_SIZE = 20;
 
 
 export const GameZoneComponent: React.FunctionComponent<TProps> = (props: TProps) => {
 
-    let ballElement: HTMLDivElement;
-
     const users: User[] = useSelector((state: any) => objectPick('serverInfo.users', state));
+
+    let canvasContext: CanvasRenderingContext2D;
+    let canvasElement: HTMLCanvasElement;
 
     // This is used to allow access from the timeout
     const usersRef = useRef(users);
@@ -35,18 +36,18 @@ export const GameZoneComponent: React.FunctionComponent<TProps> = (props: TProps
         let gameInterval: any;
 
         let timeoutSeconds = 3;
+        let ballPosition = [canvasElement.width / 2, canvasElement.height / 2];
         let ballVelocity = 1;
         let ballDirection = Math.round(Math.random()) * 180; // Randomize direction on start
 
-        ballElement.style.left = '50%';
-        ballElement.style.top = '50%';
+        drawBall(ballPosition[0], ballPosition[1]);
 
         countdownInterval = setInterval(() => {
                 timeoutSeconds--;
 
                 // Increase velocity
                 if (timeoutSeconds % 20 === 0) {
-                    ballVelocity++;
+                    ballVelocity = ballVelocity + 0.5;
                 }
 
                 // Start game
@@ -55,11 +56,14 @@ export const GameZoneComponent: React.FunctionComponent<TProps> = (props: TProps
                         const xV = ballVelocity * Math.cos(ballDirection * Math.PI / 180);
                         const yV = ballVelocity * Math.sin(ballDirection * Math.PI / 180);
 
-                        const maxX = props.width - BALL_SIZE;
-                        const maxY = props.height - BALL_SIZE;
+                        // Wall limits
+                        const maxX = props.width - BALL_RADIUS;
+                        const minX = BALL_RADIUS;
+                        const maxY = props.height - BALL_RADIUS;
+                        const minY = BALL_RADIUS;
 
-                        let xP = ballElement.offsetLeft + xV;
-                        let yP = ballElement.offsetTop + yV;
+                        let xP = ballPosition[0] + xV;
+                        let yP = ballPosition[1] + yV;
 
                         // Position limits
                         xP = xP < 0 ? 0 : xP;
@@ -68,9 +72,9 @@ export const GameZoneComponent: React.FunctionComponent<TProps> = (props: TProps
                         yP = yP > maxY ? maxY : yP;
 
                         // X Collisions (bars)
-                        const yPAnchor = yP + (BALL_SIZE / 2);
+                        const yPAnchor = yP + BALL_RADIUS;
 
-                        if (xP <= BAR_MARGIN || xP >= maxX - BAR_MARGIN) {
+                        if (xP <= minX + BAR_MARGIN || xP >= maxX - BAR_MARGIN) {
                             const team = xP <= BAR_MARGIN ? EUserTeam.red : EUserTeam.black;
                             const collisions: number[][] = getBarCollisionRanges(team).reduce(
                                 (cs: number[][], range: number[]) => {
@@ -94,15 +98,15 @@ export const GameZoneComponent: React.FunctionComponent<TProps> = (props: TProps
                                 if (ballDirection)
 
                                 // Be sure that not pass the bar!
-                                    xP = xP < BAR_MARGIN ? BAR_MARGIN : xP;
+                                    xP = xP < minX + BAR_MARGIN ? minX + BAR_MARGIN : xP;
                                 xP = xP > maxX - BAR_MARGIN ? maxX - BAR_MARGIN : xP;
                             }
                         }
 
                         // X Collisions (wall)
-                        if (xP <= 0 || xP >= maxX) {
+                        if (xP <= minX || xP >= maxX) {
                             ballDirection = (180 - ballDirection) % 360;
-                            if (xP <= 0) {
+                            if (xP <= minX) {
                                 props.increaseScore(EUserTeam.black);
                             } else {
                                 props.increaseScore(EUserTeam.red);
@@ -114,17 +118,26 @@ export const GameZoneComponent: React.FunctionComponent<TProps> = (props: TProps
                         }
 
                         // Y collisions
-                        if (yP <= 0 || yP >= maxY) {
+                        if (yP <= minY || yP >= maxY) {
                             ballDirection = (360 - ballDirection) % 360;
                         }
 
                         // Set ball position
-                        ballElement.style.left = xP + 'px';
-                        ballElement.style.top = yP + 'px';
+                        ballPosition = [xP, yP];
+                        drawBall(xP, yP);
                     }, ANIMATION_MS);
                 }
             },
             1000);
+    };
+
+
+    const drawBall = (x: number, y: number) => {
+        canvasContext.clearRect(0, 0, canvasElement.width, canvasElement.height);
+        canvasContext.beginPath();
+        canvasContext.arc(x, y, BALL_RADIUS, 0, 2 * Math.PI, false);
+        canvasContext.fillStyle = '#fff';
+        canvasContext.fill();
     };
 
 
@@ -169,18 +182,19 @@ export const GameZoneComponent: React.FunctionComponent<TProps> = (props: TProps
             });
     };
 
-    // BALL
-    const defineBallElement = (e: HTMLDivElement) => {
+    // DEFINE CANVAS & CONTEXT
+    const defineContext = (e: HTMLCanvasElement) => {
         if (e) {
-            ballElement = e;
+            canvasElement = e;
+            canvasContext = e.getContext('2d');
         }
     };
 
 
-    return <div className="game-zone">
-        <div className="ball"
-             ref={defineBallElement}
-        />
+    return props && <div className="game-zone">
+        <canvas width={props.width}
+                height={props.height}
+                ref={defineContext}/>
         {getTeamUsers(EUserTeam.red).map((u: User, i: number) => {
             return <div className="bar team-red"
                         key={i}

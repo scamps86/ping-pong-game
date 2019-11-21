@@ -53,8 +53,8 @@ export const MachineMatchPageComponent: React.FunctionComponent<TProps> = (props
     };
 
 
-    const defineGameZoneDimensiopns = (e: HTMLDivElement) => {
-        if (e) {
+    const defineGameZoneDimensions = (e: HTMLDivElement) => {
+        if (e && !gameZoneHeight && !gameZoneWidth) {
             setGameZoneHeight(e.clientHeight);
             setGameZoneWidth(e.clientWidth);
         }
@@ -78,7 +78,7 @@ export const MachineMatchPageComponent: React.FunctionComponent<TProps> = (props
             }</h1>
         </div>
         <div className="flex-grow-1"
-             ref={defineGameZoneDimensiopns}>
+             ref={defineGameZoneDimensions}>
             {gameZoneWidth && gameZoneHeight &&
             <GameZoneComponent height={gameZoneHeight}
                                width={gameZoneWidth}
