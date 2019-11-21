@@ -5,6 +5,7 @@ import {useSelector} from 'react-redux';
 import {EUserTeam, User} from '../../../model/user';
 import {objectPick} from '../../../utils/object.utils';
 import {EServerInfoScreen} from '../../../model/server-info';
+import {IState} from '../../../redux/state';
 
 
 export type TProps = PropsWithChildren<{
@@ -14,8 +15,8 @@ export type TProps = PropsWithChildren<{
 
 export const GamepadMatchPageComponent: React.FunctionComponent<TProps> = (props: TProps) => {
 
-    const me: User = useSelector((state: any) => state.me);
-    const screen: EServerInfoScreen = useSelector((state: any) => objectPick('serverInfo.screen', state));
+    const me: User = useSelector((state: IState) => state.me);
+    const screen: EServerInfoScreen = useSelector((state: IState) => objectPick('serverInfo.screen', state));
 
     let dragZoneElement: HTMLDivElement;
     let dragItemElement: HTMLDivElement;

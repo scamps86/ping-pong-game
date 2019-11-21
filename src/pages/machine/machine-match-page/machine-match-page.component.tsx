@@ -6,6 +6,7 @@ import './machine-match-page.component.scss';
 import {GameZoneComponent} from './components/game-zone/game-zone.component';
 import {objectPick} from '../../../utils/object.utils';
 import {EUserTeam} from '../../../model/user';
+import {IState} from '../../../redux/state';
 
 
 export type TProps = PropsWithChildren<{
@@ -20,7 +21,7 @@ interface IScore {
 
 export const MachineMatchPageComponent: React.FunctionComponent<TProps> = (props: TProps) => {
 
-    const screen: EServerInfoScreen = useSelector((state: any) => objectPick('serverInfo.screen', state));
+    const screen: EServerInfoScreen = useSelector((state: IState) => objectPick('serverInfo.screen', state));
     const [score, setScore] = useState<IScore>({
         red: 0,
         black: 0,

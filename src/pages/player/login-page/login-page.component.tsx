@@ -7,6 +7,7 @@ import {setMeAction} from '../../../redux/actions/actions';
 import {Dispatch} from 'redux';
 import {EServerInfoScreen, ServerInfo} from '../../../model/server-info';
 import {objectPick} from '../../../utils/object.utils';
+import {IState} from '../../../redux/state';
 
 
 export type TProps = PropsWithChildren<{
@@ -17,7 +18,7 @@ export type TProps = PropsWithChildren<{
 export const LoginPageComponent: React.FunctionComponent<TProps> = (props: TProps) => {
 
     const [name, setName] = useState<string>('');
-    const serverInfo: ServerInfo = useSelector((state: any) => state.serverInfo);
+    const serverInfo: ServerInfo = useSelector((state: IState) => state.serverInfo);
     const dispatch: Dispatch = useDispatch();
 
     const onSubmitHandler = (e: FormEvent) => {

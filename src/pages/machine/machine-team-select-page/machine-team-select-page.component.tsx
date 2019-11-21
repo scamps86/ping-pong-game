@@ -5,6 +5,7 @@ import {EServerInfoScreen, ServerInfo} from '../../../model/server-info';
 import {useSelector} from 'react-redux';
 import {machineStartMatch} from '../../../api/server-api';
 import {objectPick} from '../../../utils/object.utils';
+import {IState} from '../../../redux/state';
 
 
 export type TProps = PropsWithChildren<{
@@ -14,7 +15,7 @@ export type TProps = PropsWithChildren<{
 
 export const MachineTeamSelectPageComponent: React.FunctionComponent<TProps> = (props: TProps) => {
 
-    const serverInfo: ServerInfo = useSelector((state: any) => state.serverInfo);
+    const serverInfo: ServerInfo = useSelector((state: IState) => state.serverInfo);
 
     const doStartGame = () => {
         machineStartMatch();

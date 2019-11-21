@@ -1,10 +1,9 @@
 import openSocket from "socket.io-client";
 import {Subject} from 'rxjs';
 import {IServerInfo, ServerInfo} from '../model/server-info';
-import {host, socketPort} from '../config/api-config';
 
 
-export const socket = openSocket(host + ':' + socketPort);
+export const socket = openSocket(process.env.REACT_APP_SERVER_HOST + ':' + process.env.REACT_APP_SOCKET_API_PORT);
 
 export const onServerInfoRefresh = () => {
     console.log('SOCKET API: Listen for server info refresh...');

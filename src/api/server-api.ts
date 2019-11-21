@@ -1,11 +1,9 @@
 import axios, {AxiosResponse} from 'axios';
-import {host, port} from '../config/api-config';
 import {EUserTeam, User} from '../model/user';
 import {socket} from './socket-api';
 
 
-const baseUrl = host + ':' + port;
-
+const baseUrl = process.env.REACT_APP_SERVER_HOST + ':' + process.env.REACT_APP_SERVER_API_PORT;
 
 export const doLogin = (name: string): Promise<any> => {
     console.log('SERVER API: do login', name);
