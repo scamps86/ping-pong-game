@@ -1,7 +1,7 @@
 # Ping Pong Game
 
 * First of all, install all dependences: `npm i`<br>
-* Replace `srcconfig/api-config.ts` host with the machine local IP<br>
+* Replace the environment variable `REACT_APP_SERVER_HOST` with the machine IP<br>
 * To run the Node server: `npm run serve`<br>
 * To start the application: `npm start`<br><br>
 
